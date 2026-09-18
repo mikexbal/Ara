@@ -25,6 +25,8 @@ services:
       R2__AccountId: ${R2_ACCOUNT_ID:-}
       R2__BucketName: ${R2_BUCKET_NAME:-ara-images}
       R2__ApiToken: ${R2_API_TOKEN:-}
+      Resend__ApiKey: ${RESEND_API_KEY:-}
+      Resend__FromAddress: ${RESEND_FROM_ADDRESS:-onboarding@resend.dev}
     depends_on:
       db:
         condition: service_healthy
