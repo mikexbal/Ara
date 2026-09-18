@@ -4,6 +4,7 @@ export interface AuthUser {
   lastName: string;
   email: string;
   emailConfirmed: boolean;
+  createdAt: string;
 }
 
 export interface AuthResponse {

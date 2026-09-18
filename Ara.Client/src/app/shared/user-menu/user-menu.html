@@ -1,0 +1,51 @@
+@if (!isAuthenticated()) {
+  <a
+    routerLink="/sign-in"
+    class="hidden cursor-pointer text-sm sm:inline"
+    [class.text-white]="variant === 'dark'"
+    [class.hover:text-white/80]="variant === 'dark'"
+    [class.text-body]="variant === 'light'"
+    [class.hover:text-ink]="variant === 'light'"
+  >Sign in</a>
+  <a
+    routerLink="/create-account"
+    class="flex h-8 cursor-pointer items-center rounded-full px-3 text-xs font-medium sm:h-9.5 sm:px-4.5 sm:text-sm"
+    [class.bg-white]="variant === 'dark'"
+    [class.text-ink]="variant === 'dark'"
+    [class.hover:bg-white/90]="variant === 'dark'"
+    [class.bg-ink]="variant === 'light'"
+    [class.text-white]="variant === 'light'"
+    [class.hover:bg-ink/85]="variant === 'light'"
+  >Start planning</a>
+} @else {
+  <div class="relative">
+    <button
+      type="button"
+      (click)="toggle()"
+      aria-label="Account menu"
+      class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-teal text-sm font-medium text-white hover:bg-teal-dark"
+    >{{ initials() }}</button>
+
+    @if (open()) {
+      <div class="absolute right-0 top-12 z-30 flex w-68 flex-col gap-0.5 rounded-2xl border border-border-light bg-white p-2 shadow-2xl">
+        <div class="flex items-center gap-3 px-3 py-3">
+          <span class="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-teal text-sm font-medium text-white">{{ initials() }}</span>
+          <div class="flex flex-col gap-0.5 overflow-hidden">
+            <span class="truncate text-sm font-medium text-ink">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
+            <span class="truncate text-xs text-muted">{{ currentUser()?.email }}</span>
+          </div>
+        </div>
+
+        <div class="my-1 h-px bg-line"></div>
+
+        <a routerLink="/account" [queryParams]="{ tab: 'trips' }" (click)="close()" class="cursor-pointer rounded-lg px-3 py-2.5 text-sm text-ink hover:bg-slate-50">My trips</a>
+        <a routerLink="/account" [queryParams]="{ tab: 'saved' }" (click)="close()" class="cursor-pointer rounded-lg px-3 py-2.5 text-sm text-ink hover:bg-slate-50">Saved stays</a>
+        <a routerLink="/account" [queryParams]="{ tab: 'details' }" (click)="close()" class="cursor-pointer rounded-lg px-3 py-2.5 text-sm text-ink hover:bg-slate-50">Account settings</a>
+
+        <div class="my-1 h-px bg-line"></div>
+
+        <button type="button" (click)="signOut()" class="cursor-pointer rounded-lg bg-transparent px-3 py-2.5 text-left text-sm text-ink hover:bg-slate-50">Sign out</button>
+      </div>
+    }
+  </div>
+}

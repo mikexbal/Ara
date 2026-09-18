@@ -134,7 +134,7 @@ public class AuthService(
     private AuthResponse BuildResponse(User user)
     {
         var token = jwtTokenGenerator.GenerateToken(user);
-        var userDto = new UserDto(user.Id, user.FirstName, user.LastName, user.Email, user.EmailConfirmed);
+        var userDto = new UserDto(user.Id, user.FirstName, user.LastName, user.Email, user.EmailConfirmed, user.CreatedAt);
         return new AuthResponse(token, userDto);
     }
 

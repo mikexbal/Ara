@@ -24,7 +24,7 @@ public record ResendVerificationRequest(
     [Required, EmailAddress] string Email
 );
 
-public record UserDto(Guid Id, string FirstName, string LastName, string Email, bool EmailConfirmed);
+public record UserDto(Guid Id, string FirstName, string LastName, string Email, bool EmailConfirmed, DateTime CreatedAt);
 
 public record AuthResponse(string Token, UserDto User);
 

@@ -1,9 +1,9 @@
 import { Component, DestroyRef, HostListener, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { Destination } from '../../core/models/destination';
 import { DestinationService } from '../../core/services/destination.service';
 import { ImageService } from '../../core/services/image.service';
+import { UserMenu } from '../../shared/user-menu/user-menu';
 
 const HERO_IMAGE_ROTATION_MS = 7000;
 
@@ -11,7 +11,7 @@ type LayerUrls = [string | null, string | null];
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [UserMenu],
   templateUrl: './home.html'
 })
 export class Home {

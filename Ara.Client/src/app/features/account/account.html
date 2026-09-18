@@ -1,0 +1,139 @@
+<div class="flex flex-col">
+
+  <header class="flex h-18 items-center justify-between border-b border-line px-4 sm:px-6 lg:px-12">
+    <a routerLink="/" class="cursor-pointer text-lg font-medium tracking-tight text-ink hover:text-ink/80">Ara</a>
+    <nav class="hidden gap-8 text-sm text-body lg:flex">
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-ink">Destinations</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-ink">Stays</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-ink">Guides</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-ink">Plan a trip</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-ink">About</button>
+    </nav>
+    <app-user-menu variant="light" />
+  </header>
+
+  <section class="flex flex-col gap-6 border-b border-line px-4 py-8 sm:flex-row sm:items-center sm:px-6 sm:py-10 lg:px-12">
+    <span class="flex h-22 w-22 flex-none items-center justify-center rounded-full bg-teal text-3xl font-medium tracking-tight text-white">{{ initials() }}</span>
+    <div class="flex flex-1 flex-col gap-1.5">
+      <h1 class="m-0 text-3xl font-medium tracking-tight text-ink sm:text-4xl">{{ user()?.firstName }} {{ user()?.lastName }}</h1>
+      <span class="text-sm text-muted">{{ user()?.email }} @if (memberSince()) { · member since {{ memberSince() }} }</span>
+    </div>
+    <button
+      type="button"
+      disabled
+      title="Coming soon"
+      class="h-12 cursor-not-allowed self-start rounded-full border border-border px-6 text-sm font-medium text-ink opacity-50 sm:self-center"
+    >Edit profile</button>
+  </section>
+
+  <section class="grid grid-cols-1 gap-8 px-4 py-9 sm:px-6 sm:py-12 lg:grid-cols-[220px_1fr] lg:gap-12 lg:px-12">
+    <nav class="flex flex-col gap-1">
+      <button
+        type="button"
+        (click)="selectTab('trips')"
+        class="flex h-11 cursor-pointer items-center rounded-lg px-3.5 text-left text-sm"
+        [class.bg-slate-100]="selectedTab() === 'trips'"
+        [class.font-medium]="selectedTab() === 'trips'"
+        [class.text-ink]="selectedTab() === 'trips'"
+        [class.text-body]="selectedTab() !== 'trips'"
+      >Trips &amp; bookings</button>
+      <button
+        type="button"
+        (click)="selectTab('saved')"
+        class="flex h-11 cursor-pointer items-center rounded-lg px-3.5 text-left text-sm"
+        [class.bg-slate-100]="selectedTab() === 'saved'"
+        [class.font-medium]="selectedTab() === 'saved'"
+        [class.text-ink]="selectedTab() === 'saved'"
+        [class.text-body]="selectedTab() !== 'saved'"
+      >Saved stays</button>
+      <button
+        type="button"
+        (click)="selectTab('details')"
+        class="flex h-11 cursor-pointer items-center rounded-lg px-3.5 text-left text-sm"
+        [class.bg-slate-100]="selectedTab() === 'details'"
+        [class.font-medium]="selectedTab() === 'details'"
+        [class.text-ink]="selectedTab() === 'details'"
+        [class.text-body]="selectedTab() !== 'details'"
+      >Personal details</button>
+      <button
+        type="button"
+        (click)="selectTab('security')"
+        class="flex h-11 cursor-pointer items-center rounded-lg px-3.5 text-left text-sm"
+        [class.bg-slate-100]="selectedTab() === 'security'"
+        [class.font-medium]="selectedTab() === 'security'"
+        [class.text-ink]="selectedTab() === 'security'"
+        [class.text-body]="selectedTab() !== 'security'"
+      >Password &amp; security</button>
+      <button
+        type="button"
+        (click)="selectTab('notifications')"
+        class="flex h-11 cursor-pointer items-center rounded-lg px-3.5 text-left text-sm"
+        [class.bg-slate-100]="selectedTab() === 'notifications'"
+        [class.font-medium]="selectedTab() === 'notifications'"
+        [class.text-ink]="selectedTab() === 'notifications'"
+        [class.text-body]="selectedTab() !== 'notifications'"
+      >Notifications</button>
+
+      <div class="my-1.5 h-px bg-line"></div>
+
+      <button type="button" (click)="signOut()" class="flex h-11 cursor-pointer items-center rounded-lg px-3.5 text-left text-sm text-body hover:bg-slate-50">Sign out</button>
+    </nav>
+
+    <div class="flex flex-col gap-10">
+      @switch (selectedTab()) {
+        @case ('trips') {
+          <div class="flex flex-col gap-4">
+            <div class="flex items-baseline justify-between">
+              <h2 class="m-0 text-2xl font-medium tracking-tight text-ink">Trips &amp; bookings</h2>
+              <span class="text-sm text-muted">0 bookings</span>
+            </div>
+            <div class="flex flex-col items-start gap-3 rounded-2xl border border-line px-6 py-10">
+              <p class="m-0 text-sm text-muted">No trips yet — once you book a stay it'll show up here.</p>
+              <a routerLink="/" class="flex h-11 cursor-pointer items-center rounded-full bg-teal px-5 text-sm font-medium text-white hover:bg-teal-dark">Start planning</a>
+            </div>
+          </div>
+        }
+        @case ('saved') {
+          <div class="flex flex-col gap-4">
+            <h2 class="m-0 text-2xl font-medium tracking-tight text-ink">Saved stays</h2>
+            <div class="flex flex-col items-start gap-3 rounded-2xl border border-line px-6 py-10">
+              <p class="m-0 text-sm text-muted">You haven't saved any stays yet.</p>
+              <a routerLink="/" class="flex h-11 cursor-pointer items-center rounded-full bg-teal px-5 text-sm font-medium text-white hover:bg-teal-dark">Browse destinations</a>
+            </div>
+          </div>
+        }
+        @case ('details') {
+          <div class="flex flex-col gap-4">
+            <h2 class="m-0 text-2xl font-medium tracking-tight text-ink">Personal details</h2>
+            <div class="flex max-w-md flex-col gap-4">
+              <div class="flex flex-col gap-1.5">
+                <span class="text-xs text-muted">First name</span>
+                <span class="rounded-xl border border-border px-4 py-3 text-sm text-ink">{{ user()?.firstName }}</span>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <span class="text-xs text-muted">Last name</span>
+                <span class="rounded-xl border border-border px-4 py-3 text-sm text-ink">{{ user()?.lastName }}</span>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <span class="text-xs text-muted">Email</span>
+                <span class="rounded-xl border border-border px-4 py-3 text-sm text-ink">{{ user()?.email }}</span>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('security') {
+          <div class="flex flex-col gap-4">
+            <h2 class="m-0 text-2xl font-medium tracking-tight text-ink">Password &amp; security</h2>
+            <p class="m-0 text-sm text-muted">Coming soon.</p>
+          </div>
+        }
+        @case ('notifications') {
+          <div class="flex flex-col gap-4">
+            <h2 class="m-0 text-2xl font-medium tracking-tight text-ink">Notifications</h2>
+            <p class="m-0 text-sm text-muted">Coming soon.</p>
+          </div>
+        }
+      }
+    </div>
+  </section>
+</div>
