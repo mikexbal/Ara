@@ -123,8 +123,16 @@
           Email me island guides and seasonal notes. No more than once a month.
         </label>
 
+        @if (errorMessage()) {
+          <p class="m-0 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{{ errorMessage() }}</p>
+        }
+
         <div class="mt-2 flex flex-col gap-4">
-          <button type="submit" class="flex h-13.5 cursor-pointer items-center justify-center rounded-full bg-teal text-base font-medium text-white hover:bg-teal-dark">Create account</button>
+          <button
+            type="submit"
+            [disabled]="submitting()"
+            class="flex h-13.5 cursor-pointer items-center justify-center rounded-full bg-teal text-base font-medium text-white hover:bg-teal-dark disabled:cursor-not-allowed disabled:opacity-60"
+          >{{ submitting() ? 'Creating account…' : 'Create account' }}</button>
 
           <div class="flex items-center gap-3.5">
             <span class="h-px flex-1 bg-line"></span>

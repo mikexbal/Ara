@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Ara.Application.Common.Interfaces;
 using Ara.Domain.Entities;
 
@@ -8,7 +9,8 @@ public class AuthService(
     IPasswordHasher passwordHasher,
     IJwtTokenGenerator jwtTokenGenerator,
     IVerificationCodeStore verificationCodeStore,
-    IEmailSender emailSender) : IAuthService
+    IEmailSender emailSender,
+    ILogger<AuthService> logger) : IAuthService
 {
     // Intentionally identical for "no such user" and "wrong password" — a distinct message
     // for either case lets an attacker enumerate which emails have accounts.
@@ -116,7 +118,17 @@ public class AuthService(
             <p>This code expires in {(int)VerificationCodeLifetime.TotalSeconds} seconds.</p>
             """;
 
-        await emailSender.SendAsync(email, "Verify your email — Ara", html, cancellationToken);
+        try
+        {
+            await emailSender.SendAsync(email, "Verify your email — Ara", html, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            // The code is already in verificationCodeStore regardless of delivery success,
+            // so a flaky email provider shouldn't take down registration/login entirely —
+            // the user can still retry via "Resend code" once delivery is working again.
+            logger.LogError(ex, "Could not send verification email to {Email}", email);
+        }
     }
 
     private AuthResponse BuildResponse(User user)
