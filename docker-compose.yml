@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ara
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ara"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Ara.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__AraDb: Host=db;Port=5432;Database=ara;Username=postgres;Password=${POSTGRES_PASSWORD:-postgres}
+      R2__AccountId: ${R2_ACCOUNT_ID:-}
+      R2__BucketName: ${R2_BUCKET_NAME:-ara-images}
+      R2__ApiToken: ${R2_API_TOKEN:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5266:8080"
+
+  client:
+    build:
+      context: ./Ara.Client
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    ports:
+      - "4200:80"
+
+volumes:
+  db-data:

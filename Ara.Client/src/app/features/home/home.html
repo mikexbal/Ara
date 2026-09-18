@@ -1,0 +1,155 @@
+<div class="flex flex-col">
+
+  <!-- Sticky header: transparent over the hero, solid once scrolled -->
+  <header
+    class="sticky top-0 z-20 -mb-14 flex h-14 items-center justify-between px-4 text-white transition-colors duration-200 sm:-mb-18 sm:h-18 sm:px-6 lg:px-12"
+    [class.bg-ink]="scrolled()"
+    [class.shadow-md]="scrolled()"
+  >
+    <span class="text-base font-medium tracking-tight sm:text-lg">Travel Polynesia</span>
+    <nav class="hidden gap-8 text-sm lg:flex">
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white/70">Destinations</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white/70">Stays</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white/70">Guides</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white/70">Plan a trip</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white/70">About</button>
+    </nav>
+    <div class="flex items-center gap-2 sm:gap-3.5">
+      <a routerLink="/sign-in" class="hidden cursor-pointer text-sm hover:text-white/80 sm:inline">Sign in</a>
+      <a routerLink="/create-account" class="flex h-8 cursor-pointer items-center rounded-full bg-white px-3 text-xs font-medium text-ink hover:bg-white/90 sm:h-9.5 sm:px-4.5 sm:text-sm">Start planning</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative flex min-h-[440px] flex-col justify-end overflow-hidden bg-ink sm:min-h-[560px] md:min-h-[620px]">
+    @for (layerIndex of [0, 1]; track layerIndex) {
+      @if (layerUrls()[layerIndex]; as url) {
+        <img
+          [src]="url"
+          alt=""
+          class="pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-[2500ms] ease-in-out"
+          [class.opacity-100]="frontLayer() === layerIndex"
+          [class.opacity-0]="frontLayer() !== layerIndex"
+        />
+      }
+    }
+    <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,20,24,0.52)_0%,rgba(10,20,24,0.10)_45%,rgba(10,20,24,0.72)_100%)]"></div>
+
+    <div class="relative flex flex-col gap-3 px-4 pb-10 sm:gap-4.5 sm:px-6 sm:pb-16 lg:px-12" style="max-width: 760px">
+      <div class="font-mono text-[11px] tracking-[0.14em] text-white/90 sm:text-xs sm:tracking-[0.16em]">FRENCH POLYNESIA · SAMOA · HAWAI'I</div>
+      <h1 class="m-0 text-4xl font-medium leading-[1.02] tracking-[-0.03em] text-white sm:text-6xl sm:leading-[0.98] sm:tracking-[-0.04em] md:text-[76px]">Find your island.</h1>
+      <p class="m-0 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">Curated stays across six islands, planned day by day and booked in one place.</p>
+    </div>
+  </section>
+
+  <!-- Search bar, overlapping the hero -->
+  <div class="px-4 sm:px-6 lg:px-12">
+    <div class="relative z-10 -mt-8 grid grid-cols-1 gap-0 rounded-2xl bg-white p-3 shadow-[0_12px_36px_rgba(20,24,28,0.14)] sm:-mt-10 sm:grid-cols-[1.4fr_1fr_1fr_0.9fr_auto] sm:items-stretch sm:gap-0 sm:py-0 sm:pr-3 sm:pl-7">
+      <div class="flex flex-col justify-center gap-1 px-4 py-3 sm:px-6 sm:py-6">
+        <span class="text-xs text-muted">Destination</span>
+        <span class="text-sm text-ink">Anywhere in Polynesia</span>
+      </div>
+      <div class="flex flex-col justify-center gap-1 border-t border-line px-4 py-3 sm:border-l sm:border-t-0 sm:px-6 sm:py-6">
+        <span class="text-xs text-muted">Dates</span>
+        <span class="text-sm text-faint">Add dates</span>
+      </div>
+      <div class="flex flex-col justify-center gap-1 border-t border-line px-4 py-3 sm:border-l sm:border-t-0 sm:px-6 sm:py-6">
+        <span class="text-xs text-muted">Travellers</span>
+        <span class="text-sm text-faint">2 adults</span>
+      </div>
+      <div class="flex flex-col justify-center gap-1 border-t border-line px-4 py-3 sm:border-l sm:border-t-0 sm:px-6 sm:py-6">
+        <span class="text-xs text-muted">Budget</span>
+        <span class="text-sm text-faint">Any</span>
+      </div>
+      <button type="button" class="mx-4 mb-3 flex h-12 cursor-pointer items-center justify-center rounded-xl bg-teal text-base font-medium text-white hover:bg-teal-dark sm:mx-0 sm:my-3 sm:h-auto sm:px-10">Search</button>
+    </div>
+  </div>
+
+  <!-- Featured islands -->
+  <section class="flex flex-col gap-5 px-4 pt-12 sm:gap-6 sm:px-6 sm:pt-16 lg:px-12">
+    <div class="flex items-baseline justify-between">
+      <h2 class="m-0 text-xl font-medium tracking-tight text-ink sm:text-2xl lg:text-3xl">Featured islands</h2>
+      <button type="button" class="cursor-pointer bg-transparent p-0 text-sm font-medium text-teal hover:text-teal-dark">All six islands</button>
+    </div>
+
+    @if (loading()) {
+      <p class="text-muted">Loading islands…</p>
+    }
+    @if (error()) {
+      <p class="text-red-600">{{ error() }}</p>
+    }
+
+    @if (!loading() && !error()) {
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+        @for (island of featuredIslands(); track island.id) {
+          <button type="button" class="group flex cursor-pointer flex-col gap-3 bg-transparent p-0 text-left">
+            <span class="flex h-44 items-center justify-center rounded-2xl bg-[repeating-linear-gradient(135deg,#eef1f3_0_8px,#e3e8eb_8px_16px)] transition-shadow group-hover:shadow-lg sm:h-52 lg:h-60"></span>
+            <div class="flex flex-col gap-0.5">
+              <span class="text-lg font-medium tracking-tight text-ink group-hover:text-teal">{{ island.name }}</span>
+              <span class="text-sm text-muted">{{ island.island }} · ★ {{ island.rating }}</span>
+            </div>
+          </button>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Planner promo -->
+  <section class="grid grid-cols-1 items-center gap-6 px-4 pt-14 sm:gap-10 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:px-12">
+    <div class="flex flex-col gap-3 sm:gap-4.5">
+      <span class="font-mono text-xs tracking-[0.16em] text-muted">PLAN</span>
+      <h3 class="m-0 text-2xl font-medium leading-tight tracking-tight text-ink sm:text-3xl lg:text-4xl">One itinerary, hour by hour.</h3>
+      <p class="m-0 max-w-md text-base leading-relaxed text-body">Save stays and places as you browse, drop them onto a day, and the schedule keeps itself in order. Your trips sync across devices.</p>
+      <button type="button" class="flex h-11 w-fit cursor-pointer items-center rounded-full bg-ink px-5 text-sm font-medium text-white hover:bg-ink/85 sm:h-12.5 sm:px-6.5">Open the planner</button>
+    </div>
+    <span class="flex h-56 items-center justify-center rounded-2xl bg-[repeating-linear-gradient(135deg,#eef1f3_0_8px,#e3e8eb_8px_16px)] sm:h-72 lg:h-96"></span>
+  </section>
+
+  <!-- Guides -->
+  <section class="flex flex-col gap-5 px-4 pt-14 sm:gap-6 sm:px-6 sm:pt-20 lg:px-12">
+    <h3 class="m-0 text-xl font-medium tracking-tight text-ink sm:text-2xl lg:text-3xl">Guides from the islands</h3>
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+      <button type="button" class="group flex cursor-pointer flex-col gap-3 bg-transparent p-0 text-left">
+        <span class="block h-40 rounded-2xl bg-[repeating-linear-gradient(135deg,#eef1f3_0_8px,#e3e8eb_8px_16px)] transition-shadow group-hover:shadow-lg sm:h-50"></span>
+        <span class="font-mono text-[11px] tracking-[0.14em] text-muted">REEF</span>
+        <span class="text-lg font-medium leading-snug tracking-tight text-ink group-hover:text-teal">Where to dive in the Society Islands</span>
+      </button>
+      <button type="button" class="group flex cursor-pointer flex-col gap-3 bg-transparent p-0 text-left">
+        <span class="block h-40 rounded-2xl bg-[repeating-linear-gradient(135deg,#eef1f3_0_8px,#e3e8eb_8px_16px)] transition-shadow group-hover:shadow-lg sm:h-50"></span>
+        <span class="font-mono text-[11px] tracking-[0.14em] text-muted">BUDGET</span>
+        <span class="text-lg font-medium leading-snug tracking-tight text-ink group-hover:text-teal">A week in Samoa on $1,500</span>
+      </button>
+      <button type="button" class="group flex cursor-pointer flex-col gap-3 bg-transparent p-0 text-left">
+        <span class="block h-40 rounded-2xl bg-[repeating-linear-gradient(135deg,#eef1f3_0_8px,#e3e8eb_8px_16px)] transition-shadow group-hover:shadow-lg sm:h-50"></span>
+        <span class="font-mono text-[11px] tracking-[0.14em] text-muted">SEASONS</span>
+        <span class="text-lg font-medium leading-snug tracking-tight text-ink group-hover:text-teal">Reading the seasons: when to go</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-16 grid grid-cols-2 gap-8 bg-ink px-4 py-10 sm:mt-22 sm:grid-cols-4 sm:gap-10 sm:px-6 sm:py-14 lg:px-12">
+    <div class="col-span-2 flex flex-col gap-3 sm:col-span-1">
+      <span class="text-lg font-medium tracking-tight text-white">Polynesia</span>
+      <span class="max-w-70 text-sm leading-relaxed text-white/60">Travel guides and stays across the Pacific.</span>
+    </div>
+    <div class="flex flex-col items-start gap-2.5 text-sm text-white/60">
+      <span class="font-medium text-white">Explore</span>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">Destinations</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">Stays</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">Tours</button>
+    </div>
+    <div class="flex flex-col items-start gap-2.5 text-sm text-white/60">
+      <span class="font-medium text-white">Plan</span>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">Itineraries</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">Seasons</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">Budget</button>
+    </div>
+    <div class="flex flex-col items-start gap-2.5 text-sm text-white/60">
+      <span class="font-medium text-white">Company</span>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">About</button>
+      <button type="button" class="cursor-pointer bg-transparent p-0 hover:text-white">Contact</button>
+      <span>© 2026 Michael Balogun</span>
+    </div>
+  </footer>
+</div>

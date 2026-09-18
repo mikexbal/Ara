@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Ara.Api/Ara.Api.csproj" />
+    <Project Path="src/Ara.Application/Ara.Application.csproj" />
+    <Project Path="src/Ara.Domain/Ara.Domain.csproj" />
+    <Project Path="src/Ara.Infrastructure/Ara.Infrastructure.csproj" />
+  </Folder>
+</Solution>
