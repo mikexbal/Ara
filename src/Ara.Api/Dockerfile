@@ -4,23 +4,29 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY src/TravelPolynesia.Api/TravelPolynesia.Api.csproj src/TravelPolynesia.Api/
-COPY src/TravelPolynesia.Application/TravelPolynesia.Application.csproj src/TravelPolynesia.Application/
-COPY src/TravelPolynesia.Domain/TravelPolynesia.Domain.csproj src/TravelPolynesia.Domain/
-COPY src/TravelPolynesia.Infrastructure/TravelPolynesia.Infrastructure.csproj src/TravelPolynesia.Infrastructure/
-RUN dotnet restore src/TravelPolynesia.Api/TravelPolynesia.Api.csproj
+COPY src/Ara.Api/Ara.Api.csproj src/Ara.Api/
+COPY src/Ara.Application/Ara.Application.csproj src/Ara.Application/
+COPY src/Ara.Domain/Ara.Domain.csproj src/Ara.Domain/
+COPY src/Ara.Infrastructure/Ara.Infrastructure.csproj src/Ara.Infrastructure/
+RUN dotnet restore src/Ara.Api/Ara.Api.csproj
 
 COPY src/ src/
-RUN dotnet publish src/TravelPolynesia.Api/TravelPolynesia.Api.csproj \
+RUN dotnet publish src/Ara.Api/Ara.Api.csproj \
     -c Release \
     -o /app/publish \
     --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
+
+# Npgsql probes for GSSAPI/Kerberos support at startup; the slim base image
+# doesn't ship it, which otherwise fails every DB connection attempt.
+RUN apt-get update && apt-get install -y --no-install-recommends libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/publish .
 
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "TravelPolynesia.Api.dll"]
+ENTRYPOINT ["dotnet", "Ara.Api.dll"]

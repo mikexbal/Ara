@@ -27,6 +27,7 @@ services:
       R2__ApiToken: ${R2_API_TOKEN:-}
       Resend__ApiKey: ${RESEND_API_KEY:-}
       Resend__FromAddress: ${RESEND_FROM_ADDRESS:-onboarding@resend.dev}
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY must be set in .env}
     depends_on:
       db:
         condition: service_healthy
