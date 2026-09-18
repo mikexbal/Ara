@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddHttpClient("CloudflareR2");
         services.AddMemoryCache();
         services.AddSingleton<IImageStorageService, CloudflareR2ImageStorageService>();
+        services.AddHostedService<ImageCacheWarmupService>();
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
         services.AddSingleton<IPasswordHasher, IdentityPasswordHasher>();
