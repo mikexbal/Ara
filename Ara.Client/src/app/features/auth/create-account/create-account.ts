@@ -157,6 +157,11 @@ export class CreateAccount {
     });
   }
 
+  closeVerifyModal(): void {
+    this.stopCountdown();
+    this.showVerifyModal.set(false);
+  }
+
   private openVerifyModal(email: string, expiresInSeconds: number): void {
     this.pendingEmail.set(email);
     this.verifyCode.set('');

@@ -16,7 +16,7 @@ public class AuthService(
     // for either case lets an attacker enumerate which emails have accounts.
     private const string InvalidCredentialsMessage = "Invalid email or password.";
 
-    private static readonly TimeSpan VerificationCodeLifetime = TimeSpan.FromSeconds(20);
+    private static readonly TimeSpan VerificationCodeLifetime = TimeSpan.FromSeconds(60);
 
     public async Task<RegisterResult> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
     {
