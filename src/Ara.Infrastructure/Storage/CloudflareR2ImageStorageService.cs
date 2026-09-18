@@ -29,6 +29,9 @@ public class CloudflareR2ImageStorageService(
     public Task<IReadOnlyList<string>> ListSignUpImageKeysAsync(CancellationToken cancellationToken = default) =>
         ListImageKeysAsync(options.Value.SignUpImagePrefix, "sign-up", cancellationToken);
 
+    public Task<IReadOnlyList<string>> ListLogInImageKeysAsync(CancellationToken cancellationToken = default) =>
+        ListImageKeysAsync(options.Value.LogInImagePrefix, "log-in", cancellationToken);
+
     private async Task<IReadOnlyList<string>> ListImageKeysAsync(string prefix, string label, CancellationToken cancellationToken)
     {
         var r2 = options.Value;

@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { ImageService } from '../../../core/services/image.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -13,7 +14,9 @@ export class SignIn {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly imageService = inject(ImageService);
 
+  protected readonly logInImageUrl = signal<string | null>(null);
   protected readonly showPassword = signal(false);
   protected readonly submitted = signal(false);
   protected readonly submitting = signal(false);
@@ -24,6 +27,14 @@ export class SignIn {
     password: ['', [Validators.required]],
     keepSignedIn: [false]
   });
+
+  constructor() {
+    this.imageService.getLogInImages().subscribe({
+      next: (images) => this.logInImageUrl.set(images[0] ?? null),
+      // No image uploaded yet — the panel keeps its placeholder background.
+      error: () => this.logInImageUrl.set(null)
+    });
+  }
 
   togglePassword(): void {
     this.showPassword.update((value) => !value);

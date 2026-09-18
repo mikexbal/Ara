@@ -1,9 +1,12 @@
 <div class="grid min-h-screen grid-cols-1 lg:grid-cols-2">
 
   <!-- Photo panel -->
-  <div class="relative hidden flex-col justify-between overflow-hidden bg-[repeating-linear-gradient(135deg,#cfd6da_0_12px,#c3cbd0_12px_24px)] p-10 lg:flex">
+  <div class="relative hidden flex-col justify-between overflow-hidden bg-ink p-10 lg:flex">
+    @if (logInImageUrl(); as url) {
+      <img [src]="url" alt="" class="pointer-events-none absolute inset-0 h-full w-full object-cover" />
+    }
     <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,20,24,0.50)_0%,rgba(10,20,24,0.20)_45%,rgba(10,20,24,0.68)_100%)]"></div>
-    <span class="relative text-lg font-medium tracking-tight text-white">Ara</span>
+    <a routerLink="/" class="relative cursor-pointer text-lg font-medium tracking-tight text-white hover:text-white/80">Ara</a>
     <div class="relative flex max-w-md flex-col gap-3.5">
       <h2 class="m-0 text-4xl font-medium leading-tight tracking-tight text-white">Your trips, wherever you open them.</h2>
       <p class="m-0 text-base leading-relaxed text-white/90">Saved stays, day-by-day plans and bookings stay in one place.</p>

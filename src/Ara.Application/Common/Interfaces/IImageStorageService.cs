@@ -6,5 +6,6 @@ public interface IImageStorageService
 {
     Task<IReadOnlyList<string>> ListHeroImageKeysAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<string>> ListSignUpImageKeysAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<string>> ListLogInImageKeysAsync(CancellationToken cancellationToken = default);
     Task<ImageContent?> GetImageAsync(string key, CancellationToken cancellationToken = default);
 }

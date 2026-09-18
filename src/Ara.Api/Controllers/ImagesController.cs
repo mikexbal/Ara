@@ -23,6 +23,14 @@ public class ImagesController(IImageStorageService imageStorageService) : Contro
         return Ok(urls);
     }
 
+    [HttpGet("log-in")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetLogInImages(CancellationToken cancellationToken)
+    {
+        var keys = await imageStorageService.ListLogInImageKeysAsync(cancellationToken);
+        var urls = keys.Select(key => Url.Action(nameof(GetImageFile), new { key })!).ToList();
+        return Ok(urls);
+    }
+
     [HttpGet("file")]
     public async Task<IActionResult> GetImageFile([FromQuery] string key, CancellationToken cancellationToken)
     {

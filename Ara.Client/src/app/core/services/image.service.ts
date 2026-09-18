@@ -13,4 +13,8 @@ export class ImageService {
   getSignUpImages(): Observable<string[]> {
     return this.http.get<string[]>('/api/images/sign-up');
   }
+
+  getLogInImages(): Observable<string[]> {
+    return this.http.get<string[]>('/api/images/log-in');
+  }
 }

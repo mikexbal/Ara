@@ -13,4 +13,7 @@ public class R2Options
 
     /// <summary>Key prefix ("folder") the sign-up page photo lives under in the bucket.</summary>
     public string SignUpImagePrefix { get; set; } = "sign-up/";
+
+    /// <summary>Key prefix ("folder") the log-in page photo lives under in the bucket.</summary>
+    public string LogInImagePrefix { get; set; } = "log-in/";
 }
