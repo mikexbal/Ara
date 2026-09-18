@@ -23,7 +23,13 @@ public class CloudflareR2ImageStorageService(
     private static readonly string[] ImageExtensions = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
-    public async Task<IReadOnlyList<string>> ListHeroImageKeysAsync(CancellationToken cancellationToken = default)
+    public Task<IReadOnlyList<string>> ListHeroImageKeysAsync(CancellationToken cancellationToken = default) =>
+        ListImageKeysAsync(options.Value.HeroImagePrefix, "hero", cancellationToken);
+
+    public Task<IReadOnlyList<string>> ListSignUpImageKeysAsync(CancellationToken cancellationToken = default) =>
+        ListImageKeysAsync(options.Value.SignUpImagePrefix, "sign-up", cancellationToken);
+
+    private async Task<IReadOnlyList<string>> ListImageKeysAsync(string prefix, string label, CancellationToken cancellationToken)
     {
         var r2 = options.Value;
 
@@ -32,7 +38,7 @@ public class CloudflareR2ImageStorageService(
             var client = CreateClient(r2);
             var requestUri =
                 $"accounts/{r2.AccountId}/r2/buckets/{r2.BucketName}/objects" +
-                $"?prefix={Uri.EscapeDataString(r2.HeroImagePrefix)}&per_page=100";
+                $"?prefix={Uri.EscapeDataString(prefix)}&per_page=100";
 
             var response = await client.GetAsync(requestUri, cancellationToken);
             response.EnsureSuccessStatusCode();
@@ -46,7 +52,7 @@ public class CloudflareR2ImageStorageService(
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Could not list hero images from R2 bucket {Bucket}", r2.BucketName);
+            logger.LogWarning(ex, "Could not list {Label} images from R2 bucket {Bucket}", label, r2.BucketName);
             return [];
         }
     }

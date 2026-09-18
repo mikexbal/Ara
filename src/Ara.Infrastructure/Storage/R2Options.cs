@@ -10,4 +10,7 @@ public class R2Options
 
     /// <summary>Key prefix ("folder") the hero images live under in the bucket.</summary>
     public string HeroImagePrefix { get; set; } = "homepage/";
+
+    /// <summary>Key prefix ("folder") the sign-up page photo lives under in the bucket.</summary>
+    public string SignUpImagePrefix { get; set; } = "sign-up/";
 }

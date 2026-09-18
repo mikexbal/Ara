@@ -111,12 +111,12 @@ public class AuthService(
         verificationCodeStore.Set(email, code, VerificationCodeLifetime);
 
         var html = $"""
-            <p>Your Travel Polynesia verification code is:</p>
+            <p>Your Ara verification code is:</p>
             <h2 style="letter-spacing:4px">{code}</h2>
             <p>This code expires in {(int)VerificationCodeLifetime.TotalSeconds} seconds.</p>
             """;
 
-        await emailSender.SendAsync(email, "Verify your email — Travel Polynesia", html, cancellationToken);
+        await emailSender.SendAsync(email, "Verify your email — Ara", html, cancellationToken);
     }
 
     private AuthResponse BuildResponse(User user)

@@ -11,12 +11,20 @@ public class ImagesController(IImageStorageService imageStorageService) : Contro
     public async Task<ActionResult<IReadOnlyList<string>>> GetHeroImages(CancellationToken cancellationToken)
     {
         var keys = await imageStorageService.ListHeroImageKeysAsync(cancellationToken);
-        var urls = keys.Select(key => Url.Action(nameof(GetHeroImageFile), new { key })!).ToList();
+        var urls = keys.Select(key => Url.Action(nameof(GetImageFile), new { key })!).ToList();
         return Ok(urls);
     }
 
-    [HttpGet("hero/file")]
-    public async Task<IActionResult> GetHeroImageFile([FromQuery] string key, CancellationToken cancellationToken)
+    [HttpGet("sign-up")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetSignUpImages(CancellationToken cancellationToken)
+    {
+        var keys = await imageStorageService.ListSignUpImageKeysAsync(cancellationToken);
+        var urls = keys.Select(key => Url.Action(nameof(GetImageFile), new { key })!).ToList();
+        return Ok(urls);
+    }
+
+    [HttpGet("file")]
+    public async Task<IActionResult> GetImageFile([FromQuery] string key, CancellationToken cancellationToken)
     {
         var image = await imageStorageService.GetImageAsync(key, cancellationToken);
         if (image is null)

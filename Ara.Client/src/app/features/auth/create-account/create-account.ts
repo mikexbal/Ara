@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { ImageService } from '../../../core/services/image.service';
 import { PASSWORD_REQUIREMENTS, isPasswordValid, passwordComplexityValidator } from '../../../core/validation/password-policy';
 
 interface PasswordStrength {
@@ -34,8 +35,10 @@ export class CreateAccount {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly imageService = inject(ImageService);
   private readonly destroyRef = inject(DestroyRef);
 
+  protected readonly signUpImageUrl = signal<string | null>(null);
   protected readonly showPassword = signal(false);
   protected readonly submitted = signal(false);
   protected readonly submitting = signal(false);
@@ -74,6 +77,12 @@ export class CreateAccount {
 
   constructor() {
     this.destroyRef.onDestroy(() => this.stopCountdown());
+
+    this.imageService.getSignUpImages().subscribe({
+      next: (images) => this.signUpImageUrl.set(images[0] ?? null),
+      // No image uploaded yet — the panel keeps its placeholder background.
+      error: () => this.signUpImageUrl.set(null)
+    });
   }
 
   togglePassword(): void {

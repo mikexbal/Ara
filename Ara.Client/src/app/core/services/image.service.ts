@@ -9,4 +9,8 @@ export class ImageService {
   getHeroImages(): Observable<string[]> {
     return this.http.get<string[]>('/api/images/hero');
   }
+
+  getSignUpImages(): Observable<string[]> {
+    return this.http.get<string[]>('/api/images/sign-up');
+  }
 }
