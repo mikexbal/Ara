@@ -1,0 +1,35 @@
+name: PR Title Convention
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  check-pr-title:
+    name: Validate PR title
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR title format
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          PATTERN='^(feat|fix|refactor|chore|docs): .+ \(ARA-[0-9]+\)$'
+
+          echo "PR title: $PR_TITLE"
+
+          if [[ ! "$PR_TITLE" =~ $PATTERN ]]; then
+            echo "::error::PR title '$PR_TITLE' does not follow the required naming convention."
+            echo ""
+            echo "Expected format: <type>: <short description> (ARA-<id>)"
+            echo ""
+            echo "Valid types: feat, fix, refactor, chore, docs"
+            echo ""
+            echo "Examples:"
+            echo "  feat: Add dark mode (ARA-42)"
+            echo "  fix: Resolve login redirect issue (ARA-43)"
+            echo "  refactor: Simplify authentication service (ARA-44)"
+            echo "  chore: Update dependencies (ARA-45)"
+            exit 1
+          fi
+
+          echo "PR title is valid."

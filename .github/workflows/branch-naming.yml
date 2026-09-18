@@ -1,0 +1,41 @@
+name: Branch Naming Convention
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
+      - develop
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  check-branch-name:
+    name: Validate branch name
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name format
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        run: |
+          PATTERN='^(feature|bugfix|refactor|chore|docs)\/ARA-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$'
+
+          echo "Branch: $BRANCH_NAME"
+
+          if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
+            echo "::error::Branch name '$BRANCH_NAME' does not follow the required naming convention."
+            echo ""
+            echo "Expected format: <type>/ARA-<trello-id>-<short-description>"
+            echo ""
+            echo "Valid types: feature, bugfix, refactor, chore, docs"
+            echo ""
+            echo "Examples:"
+            echo "  feature/ARA-51-add-user-profile"
+            echo "  bugfix/ARA-124-fix-login-error"
+            echo "  refactor/ARA-125-cleanup-auth-service"
+            echo "  chore/ARA-126-update-dependencies"
+            echo "  docs/ARA-127-update-readme"
+            exit 1
+          fi
+
+          echo "Branch name is valid."
